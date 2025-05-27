@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Uma visão geral sobre servidores</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../../css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Uma visão geral sobre servidores</h1>
+        <p>Artigo por Vitalino Borges</p>
+    </header>
+    <main style="max-width: 700px; margin: 2rem auto; padding: 0 1rem;">
+        <p>Afinal, o que tem de diferente em um servidor que uma máquina desktop não tem?</p>
+        <p>Para começar, o gabinete dos servidores são bem projetados para boa refrigeração (já que pretendem ficar ligados 24/7), além dos servidores de rack que claramente possuem gabinetes projetados para ocupar as Us dos racks e não para uma mesa de trabalho normal.</p>
+        <figure style="text-align: center; margin: 2rem 0;">
+            <img src="./dell.jpeg" alt="Servidor Dell para Rack" style="max-width: 100%; height: auto;">
+            <figcaption>Um servidor Dell para Rack.</figcaption>
+        </figure>
+        <p>Geralmente não se montam servidores como se faz com desktops. É preferível adquirir servidores já montados por empresas como Dell, HP, Huawei e IBM.</p>
+        <p>Mas por que não montar um servidor? Talvez pelo layout de gabinete, dificuldade em encontrar componentes genéricos (muitos construídos para modelos de gabinetes de fabricantes específicos), confiabilidade e falta de suporte/padronização/fornecedor único. Ou seja, quem vai confiar em rodar suas aplicações críticas em um servidor sem procedência?</p>
+        <p>Servidores tendem a ter recursos redundantes e suporte a periféricos de alta capacidade, como placa de rede gigabit, mais de uma placa de rede ou placa dual port, controladoras SAS, SCSI, controladoras RAID, baias para hotplug de múltiplos discos, placas mãe bi-processadas, fonte redundante (e com suporte a hotplug), vários slots de memória RAM para suporte a grandes quantidades de armazenamento. Enfim, requisitos que não são necessários para uso doméstico. Fora a ausência de recursos mais voltados para uso doméstico como placa de som e baixa capacidade de vídeo onboard.</p>
+        <p>Como servidores são projetados para contínuos períodos de utilização intensa e compartilhada, alguns recursos possuem mecanismos para alta confiabilidade: como as placas de memória RAM ECC, que realizam checagens de integridade dos dados mitigando possíveis travamentos no servidor (e que exigem uma placa mãe e um processador com suporte a ECC).</p>
+        <p>Ainda pensando em confiabilidade, geralmente o boot de servidores são mais lentos. Isso porque a sequência de testes na inicialização é mais criteriosa, a controladora de alguns componentes são mais lentas para inicializar (como controladoras RAID), e o tipo de memória (ECC) também exige uma inicialização mais lenta (servidores com terabytes de memória demoram mais, por exemplo). No geral, quanto mais periféricos o servidor tiver, mais lento é a inicialização.</p>
+        <p>Processadores para servidores costumam ter mais recursos para processamento paralelo, como vários núcleos, memórias cache de alta capacidade, suporte a ECC, e capacidade de ativação de núcleos virtuais (como é o caso do Hyper-Threading de processadores Intel). Sendo as duas principais linhas de processadores: o Xeon da Intel e o Epyc da AMD.</p>
+        <div class="info-box">
+            <p>Falando em Xeon, a AWS, por exemplo, tem uma parceria com a Intel, e por isso só trabalha com famílias de processadores Xeon: E5, E7 e Scalable. Dependendo do tipo da instância cada um irá usar um processador diferente (instâncias mais básicas usam o Xeon E5, por exemplo).</p>
+        </div>
+        <p>Como a ideia é não precisar interagir diretamente com os servidores, alguns fabricantes embutem na placa mãe soluções para gerência remota como o iLo da HP e o iDRAC da Dell. Com essas tecnologias é possível, inclusive, ligar um servidor remotamente.</p>
+        <p>Cada fabricante possui várias linhas de modelos de servidores para atender as diversas necessidades das organizações (sejam elas básicas ou complexas), e com o passar do tempo novas gerações dessas famílias vão sendo lançadas acompanhando as novas tecnologias. No geral, a Dell possui a família de servidores PowerEdge com as linhas T para servidores torre e R para servidores de rack. Na linha R, como exemplo, temos o R240, R540, R740, R740xd, R940. Na linha T, temos o T310, T550, T640. Veja todas as séries de servidores PowerEdge da Dell aqui. A HPE possui a família de servidores ProLiant, sendo os modelos ML para servidores torre (como o ProLiant ML30 Gen10, ProLiant ML350 Gen11), e a linha DL para servidores de rack (como o ProLiant DL365 Gen11, ProLiant DL325 Gen11). A IBM possui linhas de servidores em diferentes arquiteturas de processadores (x86, Power, z/Architecture), como o Power S. A Huawei até pouco tempo atrás montava servidores usando arquitetura x86, atualmente, trabalha com a linha de servidores TaiShan equipados com processadores Kunpeng (arquitetura ARM).</p>
+        <p>Complementando, existe ainda uma classe de servidores chamado de "blade" (que significa "lâmina"). A ideia dos servidores blade é proporcionar "alta densidade", ou seja, alta capacidade de processamento e memória ocupando pouco espaço.</p>
+        <figure style="text-align: center; margin: 2rem 0;">
+            <img src="./blade.jpeg" alt="Exemplo de lâmina sendo colocada em um servidor blade." style="max-width: 100%; height: auto;">
+            <figcaption>Exemplo de lâmina sendo colocada em um servidor blade.</figcaption>
+        </figure>
+        <p>Para isso os servidores blade consistem de gabinetes dotados de boa refrigeração e fonte com vários watts de potência, com estrutura para hotplug das "lâminas", onde cada lâmina sendo um computador simples sem fonte de alimentação.</p>
+        <div class="info-box">
+            <p>Já no caso de empresas extremamente grandes (como Google, Amazon e Facebook) elas não são dependentes de um fornecedor de servidores, elas projetam e constroem seus próprios equipamentos. Como é o caso do Open Compute Project liderado pelo Facebook, onde neste projeto eles criam as especificações dos principais componentes de um data center (servidores, storages, switches, roteadores, racks, design de data center, distribuição de energia, refrigeração, e etc). A Amazon, por exemplo, possui uma subsidiária chamada "Annapurna labs" para pesquisa e desenvolvimento de equipamentos próprios.</p>
+        </div>
+        <p>Enfim, essa foi uma visão geral de máquinas encontradas em ambientes corporativos e como elas se diferem das máquinas tradicionais.</p>
+    </main>
+</body>
+</html>
