@@ -1,103 +1,579 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2026-05-20T19:29:51+00:00</updated><id>http://0.0.0.0:4000/feed.xml</id><title type="html">Meu Blog Técnico</title><subtitle>Artigos sobre tecnologia, programação e ciência.</subtitle><author><name>Seu Nome</name></author><entry><title type="html">Índices no PostgreSQL: quando e como usar</title><link href="http://0.0.0.0:4000/banco-de-dados/2025/05/18/indices-postgresql/" rel="alternate" type="text/html" title="Índices no PostgreSQL: quando e como usar" /><published>2025-05-18T00:00:00+00:00</published><updated>2025-05-18T00:00:00+00:00</updated><id>http://0.0.0.0:4000/banco-de-dados/2025/05/18/indices-postgresql</id><content type="html" xml:base="http://0.0.0.0:4000/banco-de-dados/2025/05/18/indices-postgresql/"><![CDATA[<p>Índices são a ferramenta mais poderosa para otimizar consultas em bancos de dados relacionais. Mas usados incorretamente, podem prejudicar a performance de escrita sem benefício real.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2026-09-01T18:17:01+00:00</updated><id>http://0.0.0.0:4000/feed.xml</id><title type="html">Index of /</title><subtitle>Anotações do Vitalino Borges.</subtitle><author><name>Vitalino Borges</name></author><entry><title type="html">Chips: do projeto à construção</title><link href="http://0.0.0.0:4000/eletronica/2026/07/16/chip-design/" rel="alternate" type="text/html" title="Chips: do projeto à construção" /><published>2026-07-16T00:00:00+00:00</published><updated>2026-07-16T00:00:00+00:00</updated><id>http://0.0.0.0:4000/eletronica/2026/07/16/chip-design</id><content type="html" xml:base="http://0.0.0.0:4000/eletronica/2026/07/16/chip-design/"><![CDATA[<p>https://mittechreview.com.br/por-dentro-do-software-que-se-tornara-a-proxima-frente-de-batalha-na-guerra-de-chips-entre-eua-e-china/</p>]]></content><author><name>Vitalino Borges</name></author><category term="eletronica" /><category term="eletronica" /><summary type="html"><![CDATA[Como o ajuste de requests e limits diminui a fatura da AWS.]]></summary></entry><entry><title type="html">Eletrônica analógica</title><link href="http://0.0.0.0:4000/eletronica/2026/02/20/eletronica-analogica/" rel="alternate" type="text/html" title="Eletrônica analógica" /><published>2026-02-20T00:00:00+00:00</published><updated>2026-02-20T00:00:00+00:00</updated><id>http://0.0.0.0:4000/eletronica/2026/02/20/eletronica-analogica</id><content type="html" xml:base="http://0.0.0.0:4000/eletronica/2026/02/20/eletronica-analogica/"><![CDATA[<p>O estudo formal de eletricidade e eletrônica, com toda a sua carga teórica e descrições matemáticas, pode fazer muitas pessoas se sentirem distanciadas dos fenômenos práticos, não conseguindo ligar os conceitos com experimentos reais.</p>
 
-<h2 id="como-um-índice-funciona">Como um índice funciona</h2>
+<p>Durante um tempo fiquei pensando qual experimento didático é possível de ser feito para consolidar os principais conceitos de eletrônica analógica.</p>
 
-<p>Um índice é uma estrutura de dados auxiliar (tipicamente uma B-Tree) que permite ao banco localizar linhas sem fazer um <em>sequential scan</em> na tabela inteira.</p>
+<h3 id="o-hello-world-da-eletrônica">O “hello world” da eletrônica</h3>
+<p>Hoje em dia, o “hello world” da eletrônica é fazer um pequeno <strong>semáforo de leds</strong>. Mas como fazer um da maneira mais simples possível?</p>
 
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Verificar se uma query usa índice</span>
-<span class="k">EXPLAIN</span> <span class="k">ANALYZE</span>
-<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">orders</span> <span class="k">WHERE</span> <span class="n">customer_id</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<p>Com o <strong>Arduino</strong> podemos fazer um semáforo mas, por mais legal que seja esse primeiro contato, ainda existem muitas <strong>complexidades e abstrações</strong> envolvidas em um simples piscar de leds: um software em C++ é compilado e armazenado em uma região da memória flash de um microcontrolador e este, por sua vez, através do processamento das múltiplas instruções do programa, controla a saída de tensão em determinados pinos do chip usados pelos leds.</p>
 
-<span class="c1">-- Criar um índice simples</span>
-<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_orders_customer</span> <span class="k">ON</span> <span class="n">orders</span><span class="p">(</span><span class="n">customer_id</span><span class="p">);</span>
+<p>Outra maneira mais simples de se criar um semáforo é usando <strong>timer 555</strong>. Aqui não temos mais um software e nem um microcontrolador. A frequência do piscar dos leds já é “programada” através da combinação de <strong>resistências</strong> e <strong>capacitâncias</strong>. Mas ainda sim temos um <strong>chip abstraindo coisas</strong> (com transistores, diodos e resistores dentro dele).</p>
 
-<span class="c1">-- Índice composto (ordem importa!)</span>
-<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_orders_status_date</span> <span class="k">ON</span> <span class="n">orders</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">created_at</span> <span class="k">DESC</span><span class="p">);</span>
-</code></pre></div></div>
+<p>Então, será que existe uma forma de se criar um semáforo usando apenas transistores, capacitores, resistores, e leds?</p>
 
-<h2 id="quando-não-criar-índices">Quando NÃO criar índices</h2>
+<p>Foi aí que encontrei o canal do “Burgos Eletrônica” no YouTube que apresentava um diagrama esquemático justamente do que eu estava procurando:</p>
 
-<ul>
-  <li>Tabelas pequenas (menos de ~10.000 linhas)</li>
-  <li>Colunas com baixa cardinalidade (ex: booleano <code class="language-plaintext highlighter-rouge">ativo</code>)</li>
-  <li>Tabelas com muitas escritas e poucas leituras</li>
-</ul>]]></content><author><name>Seu Nome</name></author><category term="banco-de-dados" /><category term="postgresql" /><category term="sql" /><category term="performance" /><summary type="html"><![CDATA[Índices são a ferramenta mais poderosa para otimizar consultas em bancos de dados relacionais. Mas usados incorretamente, podem prejudicar a performance de escrita sem benefício real.]]></summary></entry><entry><title type="html">Princípios SOLID explicados com exemplos reais</title><link href="http://0.0.0.0:4000/arquitetura/2025/05/01/principios-solid/" rel="alternate" type="text/html" title="Princípios SOLID explicados com exemplos reais" /><published>2025-05-01T00:00:00+00:00</published><updated>2025-05-01T00:00:00+00:00</updated><id>http://0.0.0.0:4000/arquitetura/2025/05/01/principios-solid</id><content type="html" xml:base="http://0.0.0.0:4000/arquitetura/2025/05/01/principios-solid/"><![CDATA[<p>Os princípios SOLID são a base para escrever código orientado a objetos que seja fácil de manter e estender. Vamos ver cada um com exemplos concretos.</p>
+<figure>
+ <img src="/assets/images/posts/eletronica/eletronica-analogica/diagrama.png" alt="Diagrama esquemático de um semáforo simples no simulador de circuitos SimulIDE." style="width: 75%;" />
+ <figcaption>Diagrama esquemático de um semáforo simples no simulador de circuitos SimulIDE.</figcaption>
+</figure>
 
-<h2 id="s--single-responsibility">S — Single Responsibility</h2>
-
-<p>Uma classe deve ter um único motivo para mudar. Isso não significa que ela deve fazer apenas uma coisa, mas que todas as coisas que ela faz devem estar relacionadas a uma única responsabilidade.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Ruim: a classe faz coisas demais
-</span><span class="k">class</span> <span class="nc">User</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">save_to_db</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="p">...</span>
-    <span class="k">def</span> <span class="nf">send_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="p">...</span>
-    <span class="k">def</span> <span class="nf">generate_report</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="p">...</span>
-
-<span class="c1"># Melhor: responsabilidades separadas
-</span><span class="k">class</span> <span class="nc">UserRepository</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span> <span class="p">...</span>
-
-<span class="k">class</span> <span class="nc">UserNotifier</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">send_welcome_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span> <span class="p">...</span>
-</code></pre></div></div>
-
-<h2 id="o--openclosed">O — Open/Closed</h2>
-
-<p>Classes devem estar abertas para extensão, mas fechadas para modificação. Use herança e composição em vez de alterar código existente.</p>]]></content><author><name>Seu Nome</name></author><category term="arquitetura" /><category term="solid" /><category term="oop" /><category term="design-patterns" /><summary type="html"><![CDATA[Os princípios SOLID são a base para escrever código orientado a objetos que seja fácil de manter e estender. Vamos ver cada um com exemplos concretos.]]></summary></entry><entry><title type="html">Docker na prática: containers para desenvolvedores</title><link href="http://0.0.0.0:4000/devops/2025/04/15/docker-na-pratica/" rel="alternate" type="text/html" title="Docker na prática: containers para desenvolvedores" /><published>2025-04-15T00:00:00+00:00</published><updated>2025-04-15T00:00:00+00:00</updated><id>http://0.0.0.0:4000/devops/2025/04/15/docker-na-pratica</id><content type="html" xml:base="http://0.0.0.0:4000/devops/2025/04/15/docker-na-pratica/"><![CDATA[<p>Containers revolucionaram a forma como desenvolvemos e entregamos software. Este guia cobre o essencial para começar a usar Docker no seu dia a dia.</p>
-
-<h2 id="o-que-é-um-container">O que é um container?</h2>
-
-<p>Um container é uma unidade de software que empacota o código e todas as suas dependências, garantindo que a aplicação rode de forma consistente em qualquer ambiente.</p>
-
-<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FROM</span><span class="s"> python:3.12-slim</span>
-
-<span class="k">WORKDIR</span><span class="s"> /app</span>
-<span class="k">COPY</span><span class="s"> requirements.txt .</span>
-<span class="k">RUN </span>pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
-
-<span class="k">COPY</span><span class="s"> . .</span>
-<span class="k">CMD</span><span class="s"> ["python", "app.py"]</span>
-</code></pre></div></div>
-
-<h2 id="comandos-básicos">Comandos básicos</h2>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Construir uma imagem</span>
-docker build <span class="nt">-t</span> minha-app <span class="nb">.</span>
-
-<span class="c"># Rodar um container</span>
-docker run <span class="nt">-p</span> 8080:80 minha-app
-
-<span class="c"># Listar containers em execução</span>
-docker ps
-</code></pre></div></div>]]></content><author><name>Seu Nome</name></author><category term="devops" /><category term="docker" /><category term="containers" /><category term="infraestrutura" /><summary type="html"><![CDATA[Containers revolucionaram a forma como desenvolvemos e entregamos software. Este guia cobre o essencial para começar a usar Docker no seu dia a dia.]]></summary></entry><entry><title type="html">Introdução ao Git: controle de versão na prática</title><link href="http://0.0.0.0:4000/programacao/2025/03/10/introducao-ao-git/" rel="alternate" type="text/html" title="Introdução ao Git: controle de versão na prática" /><published>2025-03-10T00:00:00+00:00</published><updated>2025-03-10T00:00:00+00:00</updated><id>http://0.0.0.0:4000/programacao/2025/03/10/introducao-ao-git</id><content type="html" xml:base="http://0.0.0.0:4000/programacao/2025/03/10/introducao-ao-git/"><![CDATA[<p>Git é a ferramenta de controle de versão mais usada no mundo, e por boas razões. Neste artigo vamos cobrir os conceitos fundamentais que você precisa saber para começar a trabalhar com eficiência.</p>
-
-<h2 id="por-que-controle-de-versão-importa">Por que controle de versão importa</h2>
-
-<p>Imagine trabalhar em um projeto sem nenhuma forma de desfazer mudanças, colaborar com outros desenvolvedores ou entender o histórico de alterações no código. Seria caótico.</p>
-
-<h2 id="os-três-estados-do-git">Os três estados do Git</h2>
-
-<p>O Git organiza seu trabalho em três áreas principais:</p>
+<p>Com este experimento podemos ver na prática os conceitos de:</p>
 
 <ul>
-  <li><strong>Working directory</strong>: onde você edita os arquivos</li>
-  <li><strong>Staging area</strong>: onde você prepara as mudanças para commit</li>
-  <li><strong>Repository</strong>: o histórico permanente de commits</li>
+  <li>análise de diagrama esquemático.</li>
+  <li>circuito em série e paralelo.</li>
+  <li>tensão.</li>
+  <li>resistência e lei de Ohm.</li>
+  <li>lei de kirchhoff.</li>
+  <li>capacitância.</li>
+  <li>transistor NPN.</li>
+  <li>diodo emissor de luz.</li>
 </ul>
 
-<h2 id="comandos-essenciais">Comandos essenciais</h2>
+<p><strong>Basicamente, tudo que é estudado de forma teórica e isolada reunido em um único projeto prático!</strong></p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Inicializar um repositório</span>
-git init
+<h3 id="circuito-na-prática">Circuito na prática</h3>
 
-<span class="c"># Adicionar arquivos ao staging</span>
-git add <span class="nb">.</span>
+<p>Ao montar o circuito de acordo com o diagrama, teremos isto:</p>
 
-<span class="c"># Fazer um commit</span>
-git commit <span class="nt">-m</span> <span class="s2">"feat: adiciona nova funcionalidade"</span>
+<figure>
+ <img src="/assets/images/posts/eletronica/eletronica-analogica/semafaro.gif" alt="Circuito real montado na protoboard." style="width: 35%;" />
+ <figcaption>Circuito real montado na protoboard.</figcaption>
+</figure>
 
-<span class="c"># Ver o histórico</span>
-git log <span class="nt">--oneline</span>
+<p>Observe que apesar de funcionar bem, a sequência dos LEDs não é a correta esperada por um semáforo.</p>
+
+<p>Do jeito que está, o circuito liga o vermelho, depois o amarelo, depois o verde, e assim ele volta para o início.</p>
+
+<p>O correto deveria ser: primeiro o vermelho, depois o verde, depois o amarelo, e volta para o início ligando o vermelho novamente.</p>
+
+<p>Por enquanto, vamos nos contentar analisando o circuito apenas como está. Depois iremos fazer um pequeno ajuste para que a sequência saia como o esperado.</p>
+
+<h3 id="alimentação-do-circuito">Alimentação do circuito</h3>
+
+<h3 id="divisão-da-corrente">Divisão da corrente</h3>
+
+<h3 id="resistências-e-lei-de-ohm">Resistências e lei de Ohm</h3>
+
+<h3 id="transistor-npn">Transistor NPN</h3>
+
+<h3 id="carregando-e-descarregando-capacitores">Carregando e descarregando capacitores</h3>
+
+<h3 id="acendendo-leds">Acendendo LEDs</h3>
+
+<h3 id="juntando-tudo">Juntando tudo</h3>
+
+<h3 id="ajustando-a-sequência-de-luzes">Ajustando a sequência de luzes</h3>]]></content><author><name>Vitalino Borges</name></author><category term="eletronica" /><category term="eletricidade" /><category term="eletronica" /><summary type="html"><![CDATA[Usando um case prático para aprender de vez.]]></summary></entry><entry><title type="html">Princípios de eletricidade</title><link href="http://0.0.0.0:4000/eletronica/2026/01/15/principios-eletricidade/" rel="alternate" type="text/html" title="Princípios de eletricidade" /><published>2026-01-15T00:00:00+00:00</published><updated>2026-01-15T00:00:00+00:00</updated><id>http://0.0.0.0:4000/eletronica/2026/01/15/principios-eletricidade</id><content type="html" xml:base="http://0.0.0.0:4000/eletronica/2026/01/15/principios-eletricidade/"><![CDATA[<h2 id="átomos">Átomos</h2>
+
+<p>Toda matéria, independente de seu estado (sólido, líquido ou gasoso), é composta por <strong>átomos</strong>. E um átomo, por sua vez, é composto por <strong>prótons, nêutrons e elétrons</strong>.</p>
+
+<p>Um átomo é uma partícula tão minúscula que, até recentemente, não existia um instrumento (como um super-microscópio) capaz de visualizá-lo (pois ele tem o tamanho de cerca de 0,2 nanômetros, e isso é muito, muito pequeno!).</p>
+
+<blockquote>
+  <p>Para se ter uma ideia de como um átomo é pequeno, se fosse possível cair até o nível atômico dentro de um grão de areia, seria como pular de um avião a <strong>2,5 km de altitude</strong>. Como nessa cena do Homem-Formiga:
+<img src="/assets/images/posts/eletronica/principios-eletricidade/ant-man.gif" alt="Foto de um átomo real feita por um microscópio quântico." style="width: 60%;" /></p>
+</blockquote>
+
+<p>Hoje já existem alguns <strong>microscópios quânticos</strong> que conseguem visualizar coisas na ordem dos picômetros.</p>
+
+<figure>
+ <img src="/assets/images/posts/eletronica/principios-eletricidade/atomo-real.png" alt="Foto de um átomo real feita por um microscópio quântico." style="width: 60%;" />
+ <figcaption>Foto de um átomo real feita por um microscópio quântico.</figcaption>
+</figure>
+
+<p>Mas com base nos experimentos e observações dos cientistas há mais de 100 anos atrás, sem precisar de um microscópio quântico, o modelo de <strong>Rutherford-Bohr</strong> foi criado para trazer uma representação visual de um átomo. Este modelo nos ajuda a compreender a relação entre os elétrons e o núcleo atômico.</p>
+
+<figure>
+ <img src="/assets/images/posts/eletronica/principios-eletricidade/bohr.png" alt="Modelo visual de um átomo Rutherford Bohr." style="width: 60%;" />
+ <figcaption>Modelo visual de um átomo Rutherford Bohr.</figcaption>
+</figure>
+
+<blockquote>
+  <p>A real é que a movimentação dos elétrons em torno do núcleo não é tão perfeita como no modelo de Rutherford-Bohr, mas vamos nos ater a este modelo por ser mais didático e nos proporcionar uma boa ideia de como a eletricidade funciona.
+<img src="/assets/images/posts/eletronica/principios-eletricidade/atom.avif" alt="Movimentação real dos elétrons em torno do núcleo." style="width: 60%;" /></p>
+</blockquote>
+
+<p>Os prótons possuem linhas de força ao seu redor formando um <strong>campo elétrico</strong> dito como <strong>positivo</strong>. Eles repelem outros prótons, pois suas linhas de força são iguais e, portanto, incompatíveis.</p>
+
+<figure>
+ <img src="/assets/images/posts/eletronica/principios-eletricidade/duas-cargas-positivas.png" alt="Linhas de força entre dois prótons. Como eles são incompatíveis, eles se repelem." style="width: 60%;" />
+ <figcaption>Linhas de força entre dois prótons. Como eles são incompatíveis, eles se repelem (observe o sentido das setas, de dentro para fora).</figcaption>
+</figure>
+
+<p>Os elétrons também possuem um campo elétrico ao seu redor, mas as linhas de força tem um sentido diferente ao dos prótons. O campo elétrico dos elétrons é tido como <strong>negativo</strong>.</p>
+
+<figure>
+ <img src="/assets/images/posts/eletronica/principios-eletricidade/eletrons.webp" alt="Dois elétrons se repulsando." style="width: 60%;" />
+ <figcaption>Dois elétrons se repulsando (observe o sentido das setas, de fora para dentro).</figcaption>
+</figure>
+
+<p>Já os nêutrons são partículas que não possuem <strong>campo elétrico</strong> (mas são importantes para permitir que vários prótons consigam ficar juntos no núcleo de um átomo sem que se repilam).</p>
+
+<p>Elétrons repelem elétrons, mas eles se <strong>atraem a prótons</strong>, pois as linhas de força dos dois são compatíveis.</p>
+
+<figure>
+ <img src="/assets/images/posts/eletronica/principios-eletricidade/duas-cargas-negativas.png" alt="Um próton se atraindo a um elétron, pois suas linhas de força são compatíveis." style="width: 60%;" />
+ <figcaption>Um próton se atraindo a um elétron, pois o sentido das suas linhas de força são compatíveis.</figcaption>
+</figure>
+
+<p>Estas mesmas linhas de força que atrai um elétron a um próton não permite que um “cole” no outro. Ou seja, faz com que o elétron sempre fique ao redor do próton, mas nunca “pregado” nele.</p>
+
+<blockquote>
+  <p>A força de atração entre um próton e um elétron, ou a força de repulsão entre cargas iguais são calculadas pela <strong>lei de Coulomb</strong>.</p>
+</blockquote>
+
+<p>Exatamente quantos prótons e quantos elétrons um átomo possui, vai depender de qual <strong>elemento químico</strong> estamos falando.</p>
+
+<ul>
+  <li>1 elétron orbitando 1 próton constitui um átomo de <strong>hidrogênio</strong>.</li>
+  <li>Se acrescentar mais 1 próton e mais 1 elétron ele se transforma em um átomo de <strong>hélio</strong>.</li>
+  <li>Com 3 prótons e 3 elétrons temos o <strong>lítio</strong>, com 4 prótons e 4 elétrons, o <strong>berílio</strong>. Com 5 prótons e 5 elétrons, o <strong>boro</strong>… e assim os <em>elementos químicos</em> vão se formando.</li>
+  <li>Observa-se que a quantidade de elétrons é igual a quantidade de prótons de um átomo. Mas nem sempre é assim! Dependendo do elemento químico, da temperatura, e de outros fatores, a quantidade de elétrons de um átomo pode ser <strong>menor</strong> que a quantidade de prótons (mesmo que temporariamente).</li>
+  <li>Um átomo é considerado <strong>neutro</strong> quando a quantidade de prótons e elétrons estão balanceados. <strong>Mas se estiver faltando um elétron ele vai ficar sempre tentando atrair um novo elétron para voltar a ficar balanceado</strong> (e isso é um ponto importante para entendermos a eletricidade).</li>
+</ul>
+
+<figure>
+ <img src="/assets/images/posts/eletronica/principios-eletricidade/elementos-quimicos.jpeg" alt="Um próton se atraindo a um elétron, pois suas linhas de força são compatíveis." style="width: 75%;" />
+ <figcaption>Exemplo dos cinco primeiros átomos de elementos químicos da tabela periódica. A quantidade de elétrons ao seu redor indica a quantidade de prótons em seu núcleo.</figcaption>
+</figure>
+
+<blockquote>
+  <p>Mas se os prótons se repelem, como é possível que dois deles co-existam no núcleo, por exemplo, de um átomo de hélio? Na natureza, existem 4 tipos de <em>forças fundamentais</em>: gravidade, eletromagnetismo, <strong>força nuclear forte</strong> e força nuclear fraca. Esse “nuclear” vem de <em>núcleo</em>, e é justamente esse tipo de força que impede a repulsão dos prótons de um átomo. Existe toda uma explicação quântica para isto, mas, em resumo, os nêutrons, apesar de não possuir carga, influenciam nesta “força nuclear forte” para manter os prótons unidos.</p>
+</blockquote>
+
+<p>Observa-se que quanto mais elétrons girando em torno do núcleo, mais <strong>camadas</strong> de elétrons vão surgindo. Logo, um átomo com muitos prótons possuirá também muitos elétrons orbitando em torno dele em várias camadas diferentes (camadas mais próximas do núcleo e camadas mais distantes do núcleo).</p>
+
+<figure>
+ <img src="/assets/images/posts/eletronica/principios-eletricidade/camadas-atomo.png" alt="Átomo com três camadas de elétrons." style="width: 40%;" />
+ <figcaption>Átomo com três camadas de elétrons.</figcaption>
+</figure>
+
+<p>Existem elementos químicos com quantidades exageradas de prótons, elétrons e nêutrons, como o ouro (com 79 prótons e 79 elétrons), a prata (com 47 prótons e 47 elétrons), e o cobre (com 29 prótons e 29 elétrons).</p>
+
+<blockquote>
+  <p>Até existem vários outros elementos químicos com muito mais elétrons e prótons, mas elementos acima de 84 prótons já são considerados elementos <strong>radioativos</strong> (devido a grande quantidade de energia retida em seus átomos), além de muitos não serem facilmente encontrados na natureza.</p>
+</blockquote>
+
+<p>Os elétrons das camadas mais distantes do núcleo possui uma força de atração mais fraca, podendo se desprender do núcleo e partir para a órbita de outros átomos. Estes são os <strong>elétrons livres</strong>.</p>
+
+<p>Os elétrons livres são mais presentes em materiais cujo elemento químico possui várias camadas de elétrons (como os já citados <strong>ouro</strong>, <strong>prata</strong> e <strong>cobre</strong>, por exemplo). Estes materiais que tem facilidade de comportar muitos elétrons livres são chamados de <strong>materiais condutores</strong>, e são justamente eles que são aproveitados como <strong>meio</strong> para <em>conduzir</em>  uma movimentação intensa e uniforme em um único sentido desses elétrons para uma direção, também conhecido como <strong>corrente elétrica</strong> (vamos falar mais disso agora a pouco).</p>
+
+<p>Em temperaturas normais, os elétrons livres ficam se movimentando pelo material condutor (mas sem gerar corrente, pois são movimentações aleatórias onde o espaço por um é logo ocupado por outro).</p>
+
+<figure>
+ <img src="/assets/images/posts/eletronica/principios-eletricidade/eletrons-livres.gif" alt="Elétrons livres se movimentando entre os átomos." style="width: 40%;" />
+ <figcaption>Elétrons livres se movimentando entre os átomos.</figcaption>
+</figure>
+
+<h2 id="eletricidade-estática">Eletricidade estática</h2>
+
+<p>Entender o conceito de eletricidade estática é importante para compreendermos melhor os princípios de eletricidade.</p>
+
+<p>Dependendo da tendência que um objeto tem de <em>perder</em> ou <em>ganhar</em> elétrons, caso ele seja <strong>atritado</strong> com outro material, uma <em>transferência de elétrons</em> pode ocorrer fazendo com que um material fique com excesso de elétrons e o outro com um déficit de elétrons.</p>
+
+<p>Exatamente quais materiais quando atritados irão gerar transferência de elétrons pode ser listados pela <strong>série triboelétrica</strong>:</p>
+
+<figure>
+ <img src="/assets/images/posts/eletronica/principios-eletricidade/triboeletrica.avif" alt="Um próton se atraindo a um elétron, pois suas linhas de força são compatíveis." style="width: 80%;" />
+ <figcaption>Um próton se atraindo a um elétron, pois suas linhas de força são compatíveis.</figcaption>
+</figure>
+
+<p>Em tempos secos, o atrito de nossas roupas com o estofado do banco do carro pode fazer nossos corpos perderem elétrons. Ao encostar na lataria do carro, os elétrons livres da lataria tentarão repor o déficit de elétrons dos nossos corpos, gerando um choque.</p>
+
+<p>Os raios são formados dentro das nuvens de tempestade devido ao acúmulo de cargas positivas na parte superior e de cargas negativas na parte inferior. Outra possibilidade são as cargas negativas acumuladas na parte inferior das nuvens se atraírem a carga positiva do solo.</p>
+
+<p>Para lidar com os possíveis problemas gerados pela eletrostática no dia-a-dia (como choques ou queima de dispositivos eletrônicos sensíveis) o aterramento é a solução, oferecendo um caminho condutivo a terra (ou outro material eletricamente neutro).</p>
+
+<ul>
+  <li>para evitar a queima de dispositivos, é recomendado o uso de pulseira eletrostática.</li>
+  <li>caminhões tanque possuem aterramento para evitar acidentes durante abastecimento de postos de combustível.</li>
+</ul>
+
+<h2 id="diferença-de-potencial-elétrico-e-formação-da-corrente">Diferença de potencial elétrico e formação da corrente</h2>
+
+<p>Quando dois pontos eletricamente neutros são ligados através de um fio condutor, nada acontecerá.</p>
+
+<p>Da mesma forma, se dois pontos carregados de cargas negativas são ligados por um fio condutor, também nada acontecerá.</p>
+
+<p>O mesmo será se dois pontos carregados positivamente forem ligados pelo fio.</p>
+
+<p>Mas quando dois pontos com potencial elétrico diferentes (onde um ponto tem excesso de elétrons e outro ponto tem desfalque de elétrons) são ligados por um fio condutor, imediatamente um campo elétrico é formado por todo o fio como resultado do campo elétrico de cada elétron livre empurrando o próximo elétron livre pela repulsão das suas cargas.</p>
+
+<figure>
+ <img src="/assets/images/posts/eletronica/principios-eletricidade/campo-eletrico.gif" alt="Campo elétrico formado em um fio quando a corrente elétrica resolve passar por ele." style="width: 50%;" />
+ <figcaption>Campo elétrico formado em um fio quando a corrente elétrica resolve passar por ele.</figcaption>
+</figure>
+
+<p>Mais informações sobre campo elétrico: https://www.if.ufrj.br/~dore/Fis3/origem.htm</p>
+
+<p>Como um elétron livre empurra outro elétron livre assim que o circuito é fechado, instantaneamente todos os elétrons livres passam a marchar no sentido ao polo positivo, formando a <strong>corrente elétrica</strong>.</p>
+
+<p>Apesar de paracer contraintuitivo, o fluxo de elétrons se movem do negativo para o positivo, mas o campo elétrico surge do positivo para o negativo, atraindo os elétrons para este sentido.</p>
+
+<p>Com a movimentação dos elétrons pelo fio, um pequeno campo magnético também se forma sempre girando no sentido horário ao sentido da corrente convencional (regra da mão direita da Lei de Ampere).</p>
+
+<p>Quando dois fios, um ao lado do outro, passam corrente em um mesmo sentido, o campo magnético de ambos se somam. Este princípio permite o funcionamento de eletroimãs, por exemplo.</p>
+
+<p>Quando dois fios com corrente em direções opostas estão muito próximos, o campo magnético se anula.</p>
+
+<p>Quanto maior a diferença de potencial entre os pontos, maior a intensidade da corrente. Essa intensidade é medida em <strong>volts</strong>.</p>
+
+<p>Em um circuito de resistência fixa, quanto maior a tensão, maior a corrente.</p>
+
+<p>A lei de Ohm mostra a relação entre tensão, corrente e resistência pela fórmula: <strong>V = R x I</strong>.</p>
+
+<p>Em um cenário de resistência fixa, se quero dobrar a corrente, tenho que dobrar a tensão.</p>
+
+<p>Para saber quantos volts são necessários para entregar certa potência exigida por um dispositivo, a seguinte fórmula é usada: V = P / I.</p>
+
+<p>A corrente (medida em amperes) indica quanta energia um dispositivo precisa consumir para funcionar. A potência total de um dispositivo é a soma de todas as “subpotências” consumidas pelos componentes do circuito. Sua fórmula é: P = V x I.</p>
+
+<p>Quando uma corrente passa por um fio, um campo magnético circular também é gerado. Com a regra da mão direita (lei de Ampere) é possível identificar o sentido da rotação do campo magnético.</p>
+
+<p>Quando dois fios com corrente no mesmo sentido estão juntos, os campos magnéticos se somam. Se a corrente está em sentidos diferentes, o campo magnético se anula.</p>
+
+<h2 id="fontes-de-geração-de-eletricidade">Fontes de geração de eletricidade</h2>
+
+<h2 id="circuitos-e-resistência">Circuitos e resistência</h2>
+
+<h2 id="diagramas-esquemáticos">Diagramas esquemáticos</h2>
+
+<figure>
+ <img src="/assets/images/posts/eletronica/principios-eletricidade/simbolos.jpg" alt="Símbolos de componentes eletrônicos." style="width: 50%;" />
+ <figcaption>Símbolos de componentes eletrônicos.</figcaption>
+</figure>
+
+<h2 id="indutor-bobina">Indutor (bobina)</h2>
+
+<h2 id="capacitor">Capacitor</h2>
+
+<h2 id="semicondutores-diodos-e-transitores">Semicondutores (diodos e transitores)</h2>
+
+<h2 id="corrente-alternada">Corrente alternada</h2>]]></content><author><name>Vitalino Borges</name></author><category term="eletronica" /><category term="eletricidade" /><category term="eletronica" /><summary type="html"><![CDATA[Uma análise dos fenômenos sem descrições matemáticas.]]></summary></entry><entry><title type="html">Otimização de custo EKS através do Kubecost</title><link href="http://0.0.0.0:4000/infraestrutura/2026/01/15/kubecost/" rel="alternate" type="text/html" title="Otimização de custo EKS através do Kubecost" /><published>2026-01-15T00:00:00+00:00</published><updated>2026-01-15T00:00:00+00:00</updated><id>http://0.0.0.0:4000/infraestrutura/2026/01/15/kubecost</id><content type="html" xml:base="http://0.0.0.0:4000/infraestrutura/2026/01/15/kubecost/"><![CDATA[<p>Um cluster Kubernetes é um ambiente compartilhado para o processamento de aplicações de diversas equipes. Para que os picos de consumo de CPU e memória de uma aplicação não degrade a performance de outra aplicação rodando em um mesmo node, é necessário que seja aplicado <strong>limites</strong>.</p>
+
+<p>Além disto, para que seja possível garantir que os recursos mínimos estejam disponíveis em um node para rodar uma determinada aplicação, é necessário o uso de <strong>requests</strong>.</p>
+
+<p>Por isso, é muito comum vermos nos Charts Helm e no YAML dos deployments configurações como estas:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+   <span class="na">limits</span><span class="pi">:</span>
+     <span class="na">cpu</span><span class="pi">:</span> <span class="s">200m</span>
+     <span class="na">memory</span><span class="pi">:</span> <span class="s">512Mi</span>
+   <span class="na">requests</span><span class="pi">:</span>
+     <span class="na">cpu</span><span class="pi">:</span> <span class="s">100m</span>
+     <span class="na">memory</span><span class="pi">:</span> <span class="s">256Mi</span>
 </code></pre></div></div>
 
-<p>O domínio desses comandos é o ponto de partida para qualquer fluxo de trabalho moderno com Git.</p>]]></content><author><name>Seu Nome</name></author><category term="programacao" /><category term="git" /><category term="versionamento" /><category term="devtools" /><summary type="html"><![CDATA[Um guia prático e direto sobre os fundamentos do Git para desenvolvedores que estão começando.]]></summary></entry></feed>
+<p>O problema é que o <strong>mal dimensionamento</strong> destas configurações podem gerar dois cenários:</p>
+
+<ul>
+  <li>
+    <p>requisições de CPU e memória altos podem aumentar o custo da fatura da AWS, pois mais nodes EKS irão ser provisionados <strong>desnecessariamente</strong> para evitar que os pods fiquem em estado de <em>Pending</em>.</p>
+  </li>
+  <li>
+    <p>limites de CPU e memória inferior ao consumo médio esperado pela aplicação podem causar degradação da performance (gerando problemas como CPU Throttling e Out of Memory).</p>
+  </li>
+</ul>
+
+<p>Exemplo de <code class="language-plaintext highlighter-rouge">requests</code> potencialmente <strong>mal dimensionado</strong>:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+   <span class="na">limits</span><span class="pi">:</span>
+     <span class="na">cpu</span><span class="pi">:</span> <span class="s">3000m</span>
+     <span class="na">memory</span><span class="pi">:</span> <span class="s">4Gi</span>
+   <span class="na">requests</span><span class="pi">:</span>
+     <span class="na">cpu</span><span class="pi">:</span> <span class="s">3000m</span>
+     <span class="na">memory</span><span class="pi">:</span> <span class="s">4Gi</span>
+</code></pre></div></div>
+<blockquote>
+  <p>Isto exigirá um node com 4GiB de memória livre e 3 cores ociosas só para sua aplicação. Certamente seu microsserviço precisará de muito menos que isto, certo?</p>
+</blockquote>
+
+<p>Exemplo de <code class="language-plaintext highlighter-rouge">request</code> melhor dimensionado:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
+   <span class="na">limits</span><span class="pi">:</span>
+     <span class="na">cpu</span><span class="pi">:</span> <span class="s">200m</span>
+     <span class="na">memory</span><span class="pi">:</span> <span class="s">256Mi</span>
+   <span class="na">requests</span><span class="pi">:</span>
+     <span class="na">cpu</span><span class="pi">:</span> <span class="s">100m</span>
+     <span class="na">memory</span><span class="pi">:</span> <span class="s">192Mi</span>
+</code></pre></div></div>
+<blockquote>
+  <p>Agora o cenário está mais otimizado: a aplicação exigirá no mínimo 192MiB de memória livre e 10% de 1 core ocioso.</p>
+</blockquote>
+
+<p>Mas como saber quais requests de CPU e memória devemos ajustar nas nossas aplicações?</p>
+
+<h3 id="recomendações-do-kubecost">Recomendações do Kubecost</h3>
+
+<p>O Kubecost é uma ferramenta com interface Web que consome a <strong>API do Kubernetes</strong> e a <strong>API Pública de Pricing da AWS</strong> para mensurar os custos de um cluster EKS e disponibilizar recomendações de ajustes de <code class="language-plaintext highlighter-rouge">limits</code> e <code class="language-plaintext highlighter-rouge">requests</code>.</p>
+
+<p>Na página principal do Kubecost ele te apresenta uma série de valores que ele mensurou. Um valor interessante a se destacar é a <strong>eficiência</strong>:</p>
+<figure>
+ <img src="/assets/images/posts/infraestrutura/kubecost/kubecost-01.png" alt="A “eficiência” é a relação do recurso requisitado, com o recurso consumido, e o preço deste recurso provisionado na AWS. Quanto maior a eficiência, melhor!" style="width: 100%;" />
+ <figcaption>A “eficiência” é a relação do recurso requisitado, com o recurso consumido, e o preço deste recurso provisionado na AWS. Quanto maior a eficiência, melhor!</figcaption>
+</figure>
+
+<p>Quando a eficiência de um cluster EKS está próximo de 100%, isto indica um bom uso dos nodes provisionados. Devemos nos esforçar para subir cada vez mais esta eficiência.</p>
+
+<p>Vejamos um exemplo de melhoria da eficiência de apps do namespace “monitoring”:</p>
+<figure>
+ <img src="/assets/images/posts/infraestrutura/kubecost/kubecost-02.png" alt="1° - clique em “Savings“ no menu esquerdo." style="width: 80%;" />
+ <figcaption>1° - clique em “Savings“ no menu esquerdo.</figcaption>
+</figure>
+
+<figure>
+ <img src="/assets/images/posts/infraestrutura/kubecost/kubecost-03.png" alt="2° - clique em “Request right-sizing recommendations“." style="width: 100%;" />
+ <figcaption>2° - clique em “Request right-sizing recommendations“.</figcaption>
+</figure>
+
+<figure>
+ <img src="/assets/images/posts/infraestrutura/kubecost/kubecost-04.png" alt="3° - na tela que se abrir, clique no botão “Customize“ para filtrar por recomendações de objetos k8s de um namespace específico." style="width: 80%;" />
+ <figcaption>3° - na tela que se abrir, clique no botão “Customize“ para filtrar por recomendações de objetos k8s de um namespace específico.</figcaption>
+</figure>
+
+<figure>
+ <img src="/assets/images/posts/infraestrutura/kubecost/kubecost-05.png" alt="4º - no modal que se abrir, clique em “Filters“ &gt; “namespace“." style="width: 80%;" />
+ <figcaption>4º - no modal que se abrir, clique em “Filters“ &gt; “namespace“.</figcaption>
+</figure>
+
+<figure>
+ <img src="/assets/images/posts/infraestrutura/kubecost/kubecost-06.png" alt="5º - preencha o campo de texto com o nome do namespace que você quer filtrar. Em seguida clique no botão de +." style="width: 80%;" />
+ <figcaption>5º - preencha o campo de texto com o nome do namespace que você quer filtrar. Em seguida clique no botão de +.</figcaption>
+</figure>
+
+<figure>
+ <img src="/assets/images/posts/infraestrutura/kubecost/kubecost-07.png" alt="6º - clique no botão de “Save”." style="width: 80%;" />
+ <figcaption>6º - clique no botão de “Save”.</figcaption>
+</figure>
+
+<figure>
+ <img src="/assets/images/posts/infraestrutura/kubecost/kubecost-08.png" alt="7º - na próxima tela será mostrado a eficiência dos objetos k8s e suas respectivas recomendações de requests de CPU e memória. No caso do print, os três últimos deployments apresentaram eficiência de 100%, mas os três primeiros não!" style="width: 80%;" />
+ <figcaption>7º - na próxima tela será mostrado a eficiência dos objetos k8s e suas respectivas recomendações de requests de CPU e memória. No caso do print, os três últimos deployments apresentaram eficiência de 100%, mas os três primeiros não!</figcaption>
+</figure>
+
+<p>Na tela acima temos recomendações de ajustes de três componentes. Vamos acessar o YAML destes DaemonSets e Deployments e aplicar os ajustes recomendados. Por exemplo:</p>
+
+<p>monitoring\daemonset\newrelic-infra <strong>antes</strong>:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   <span class="na">resources</span><span class="pi">:</span>                                   
+     <span class="na">limits</span><span class="pi">:</span>                                    
+       <span class="na">memory</span><span class="pi">:</span> <span class="s">300M</span>                               
+     <span class="na">requests</span><span class="pi">:</span>                              
+       <span class="na">cpu</span><span class="pi">:</span> <span class="s">100m</span>                           
+       <span class="na">memory</span><span class="pi">:</span> <span class="s">150M</span>
+</code></pre></div></div>
+
+<p>monitoring\daemonset\newrelic-infra <strong>depois</strong>:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   <span class="na">resources</span><span class="pi">:</span>                                            
+     <span class="na">limits</span><span class="pi">:</span>                                            
+       <span class="na">memory</span><span class="pi">:</span> <span class="s">300M</span>                          
+     <span class="na">requests</span><span class="pi">:</span>
+       <span class="na">cpu</span><span class="pi">:</span> <span class="s">85m</span>                                      
+       <span class="na">memory</span><span class="pi">:</span> <span class="s">95M</span>
+</code></pre></div></div>
+
+<p>Após os ajustes, demorará cerca de 3 horas para o Kubecost reavaliar as alterações. Depois de reavaliado, verifique novamente a eficiência dos objetos k8s.</p>]]></content><author><name>Vitalino Borges</name></author><category term="infraestrutura" /><category term="finops" /><category term="kubernetes" /><category term="aws" /><category term="eks" /><summary type="html"><![CDATA[Como o ajuste de requests e limits diminui a fatura da AWS.]]></summary></entry><entry><title type="html">Emulando Orientação a Objetos em C</title><link href="http://0.0.0.0:4000/programacao/2023/06/27/poo-em-c/" rel="alternate" type="text/html" title="Emulando Orientação a Objetos em C" /><published>2023-06-27T00:00:00+00:00</published><updated>2023-06-27T00:00:00+00:00</updated><id>http://0.0.0.0:4000/programacao/2023/06/27/poo-em-c</id><content type="html" xml:base="http://0.0.0.0:4000/programacao/2023/06/27/poo-em-c/"><![CDATA[<p>A primeira vez que tomei conhecimento da existência da possibilidade de escrever em OO em C foi por meio dessa palestra:</p>
+
+<p><img src="/assets/images/posts/programacao/oop-em-c/video-hisham.png" alt="Diagrama de herança" style="width: 60%;" /></p>
+
+<p>Vale muito a pena estudar o <a href="https://hisham.hm/papers/talks/fisl16.pdf">slide</a> dele!</p>
+
+<p>Fiquei muito empolgado com a ideia de poder entender orientação a objetos explorando recursos da linguagem C. Como sou um curioso dessa linguagem, deixo aqui neste artigo algumas anotações sobre esse tema.</p>
+
+<h2 id="contextualizando">Contextualizando</h2>
+
+<p>As várias linguagens de programação existentes podem ser classificadas de acordo com seus paradigmas. Podemos listar alguns dos paradigmas como:</p>
+
+<ul>
+  <li>Estruturado.</li>
+  <li>Procedural.</li>
+  <li>Orientado a Objetos.</li>
+  <li>Orientado a Eventos.</li>
+  <li>Funcional.</li>
+  <li>Declarativo.</li>
+  <li>Lógico.</li>
+  <li>Paralela.</li>
+</ul>
+
+<p>Um paradigma irá determinar a visão que o programador terá do código, ou seja, determinará como o programador irá pensar o código de uma aplicação.</p>
+
+<p>Muitas linguagens de programação são multi-paradigma, suportando nativamente um ou mais paradigmas. Como é o caso da linguagem C que suporta nativamente os paradigmas procedural e estruturado.</p>
+
+<p>Um ponto interessante a se saber é que é possível emular um paradigma sobre uma linguagem que não a suporta nativamente. Por exemplo: é possível emular <a href="https://www.pluralsight.com/guides/functional-style-programming-using-c">programação funcional</a> ou <a href="https://ldeniau.web.cern.ch/ldeniau/">orientada a objetos</a> sobre a linguagem C.</p>
+
+<p>É claro que essa emulação não terá a qualidade esperada de uma linguagem que a suporta nativamente. Então por que alguém se daria o trabalho de fazer uma gambiarra dessas? Vamos pontuar algumas possíveis justificativas:</p>
+
+<ol>
+  <li>
+    <p>o programador pode apenas estar tentando se tornar mais íntimo de um paradigma específico, tentando <a href="https://staff.washington.edu/gmobus/Academics/TCES202/Moodle/OO-ProgrammingInC.html">entender</a> a sua implementação.</p>
+  </li>
+  <li>
+    <p>um paradigma mais elaborado (como o OO) poderá ser emulado sobre uma linguagem mais simples por razões de performance (como por exemplo em sistemas embarcados usando C ao invés de C++).</p>
+  </li>
+  <li>
+    <p>a reprodução de algumas características de um determinado paradigma sobre outra linguagem que não a suporta pode ser útil para tornar o código mais manutenível (algumas bibliotecas em C, por exemplo, se beneficiam de características de OO para tornar o código manutenível, <a href="https://dirk.rave.org/chap9.txt">neste outro caso</a> o autor utiliza OO em arquivos BAT do Windows, assim como outros exemplos, como OO em Shell Script).</p>
+  </li>
+</ol>
+
+<h2 id="orientação-a-objetos-e-c">Orientação a Objetos e C</h2>
+
+<p>Vamos discutir quais recursos da linguagem C podemos utilizar para emular a orientação a objetos. Existem alguns projetos open source que se beneficiam dessa emulação como design pattern:</p>
+
+<ul>
+  <li><a href="https://github.com/htop-dev/htop">htop</a>: visualizador de processos muito usado.</li>
+  <li><a href="https://toshiocp.github.io/Gobject-tutorial/">GObject</a>: usada pela biblioteca GTK+, a base de ambientes gráficos GNOME, Cinnamon, MATE, XFCE, e LXDE.</li>
+  <li><a href="https://lwn.net/Articles/444910/">Alguns padrões do kernel Linux</a>.</li>
+</ul>
+
+<blockquote>
+  <p>Tem um livro onde o autor implementa alguns padrões de projeto da “Gangue dos 4” (originalmente pensados em C++) em C: <a href="https://leanpub.com/patternsinc">https://leanpub.com/patternsinc</a>.</p>
+</blockquote>
+
+<p>O paradigma de orientação a objetos se sustenta sobre três pilares:</p>
+
+<ul>
+  <li>Encapsulamento.</li>
+  <li>Herança.</li>
+  <li>Polimorfismo.</li>
+</ul>
+
+<p>Basicamente, a ideia é emular esses pilares usando recursos da linguagem C como:</p>
+
+<ul>
+  <li>structs opacas e ponteiros opacos como estruturas genéricas no código principal, e structs e ponteiros válidos somente no escopo de arquivo (válidos somente dentro de arquivos .c isolados do código principal) para emular encapsulamento de dados.</li>
+  <li>structs aninhadas para emular herança.</li>
+  <li>e ponteiros de função para emular polimorfismo.</li>
+</ul>
+
+<p>Então, em resumo, uma “classe” em C será um arquivo .c dedicado a declarar uma struct que aglutinará “atributos privados” (membros da struct acessíveis somente no escopo do arquivo), “métodos” (ponteiros para funções para acesso aos membros da struct), “método construtor” (função responsável por alocar memória na heap e popular alguns membros da struct), e outras funções e variáveis internas do “objeto”.</p>
+
+<h2 id="garbage-collector-em-c">Garbage Collector em C</h2>
+
+<p>No processo de compilação usaremos <code class="language-plaintext highlighter-rouge">-lgc</code>, no arquivo connection.c incluiremos o <code class="language-plaintext highlighter-rouge">gc.h</code>, e usaremos um malloc diferente chamado <code class="language-plaintext highlighter-rouge">GC_malloc()</code>.</p>
+
+<p>A <a href="https://en.wikipedia.org/wiki/Boehm_garbage_collector">libgc</a> foi usada aqui para implementar um Garbage Collector (isso mesmo: garbage collector em C), com ela não será necessário usar <code class="language-plaintext highlighter-rouge">free()</code> para destruir nosso “objeto” instanciado.</p>
+
+<blockquote>
+  <p>Existem vários algoritmos diferentes de garbage collector (o Java, por exemplo, possui suporte a várias implementações de GC). A libgc (também chamada de Boehm-Demers-Weiser Garbage Collector) faz uso do tradicional <a href="https://www.hboehm.info/gc/index.html#details">Mark-and-Sweep</a>.</p>
+</blockquote>
+
+<h2 id="tá-bom-vamos-ver-como-fica">Tá bom, vamos ver como fica</h2>
+
+<p>Para não ficar confuso, vamos ao seguinte código de exemplo de um cliente de rede. Mas antes duas coisas são importantes frisar:</p>
+
+<ol>
+  <li>o arquivo main.c não conhece o conteúdo do objeto connection (connection no escopo desse arquivo é uma struct opaca). Os acessos aos “métodos” do objeto ocorre através de artimética de ponteiros.</li>
+  <li>todo o arquivo connection.c seria a implementação da “classe” (não só a struct). E observe que a struct connection possui membros vistos apenas no escopo deste arquivo. Desta forma, a “classe” Connection poderá ser modificada sem o conhecimento de quem a chama (abstração).</li>
+</ol>
+
+<h3 id="saída-da-execução">Saída da execução</h3>
+<p><img src="/assets/images/posts/programacao/oop-em-c/output.png" alt="Compilação e execução do código." style="width: 60%;" /></p>
+
+<h2 id="código">Código</h2>
+<p>Compila com: <code class="language-plaintext highlighter-rouge">gcc main.c connection.c -o main -lgc</code></p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// main.c: Exemplo de C Orientado a Objeto</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">"connection.h"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+ <span class="n">Connection</span> <span class="o">*</span><span class="n">connection</span><span class="p">;</span>
+ <span class="n">Data</span> <span class="n">payload</span><span class="p">;</span>
+
+ <span class="n">connection</span> <span class="o">=</span> <span class="n">new_Connection</span><span class="p">();</span> <span class="c1">// implementa uma espécie de "construtor"</span>
+ <span class="n">payload</span> <span class="o">=</span> <span class="p">(</span><span class="n">Data</span><span class="p">)</span> <span class="s">"GET / HTTP/1.1"</span><span class="p">;</span>
+
+ <span class="p">((</span><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="n">Connection</span> <span class="o">*</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="p">))</span> <span class="o">*</span><span class="p">((</span><span class="kt">long</span> <span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">connection</span><span class="o">+</span><span class="mi">0</span><span class="p">)</span> <span class="p">)</span> <span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="s">"127.0.0.1"</span><span class="p">);</span> <span class="c1">// chama método setServer</span>
+ <span class="p">((</span><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="n">Connection</span> <span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="p">))</span>    <span class="o">*</span><span class="p">((</span><span class="kt">long</span> <span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">connection</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="p">)</span> <span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="mi">80</span><span class="p">);</span>          <span class="c1">// chama método setPort</span>
+ <span class="p">((</span><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="n">Connection</span> <span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="p">))</span>    <span class="o">*</span><span class="p">((</span><span class="kt">long</span> <span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">connection</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span> <span class="p">)</span> <span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="mi">6</span><span class="p">);</span>           <span class="c1">// chama método setProtocol</span>
+ <span class="p">((</span><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="n">Connection</span> <span class="o">*</span><span class="p">,</span> <span class="n">Data</span><span class="p">))</span>   <span class="o">*</span><span class="p">((</span><span class="kt">long</span> <span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">connection</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span> <span class="p">)</span> <span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">payload</span><span class="p">);</span>     <span class="c1">// chama método setData</span>
+ <span class="p">((</span><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="n">Connection</span> <span class="o">*</span><span class="p">))</span>         <span class="o">*</span><span class="p">((</span><span class="kt">long</span> <span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">connection</span><span class="o">+</span><span class="mi">4</span><span class="p">)</span> <span class="p">)</span> <span class="p">(</span><span class="n">connection</span><span class="p">);</span>              <span class="c1">// chama método startConnection</span>
+
+ <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// connection.h: definição de dados abstratos</span>
+<span class="cp">#ifndef CONNECTION_H__
+#define CONNECTION_H__
+</span>
+<span class="cp">#define TCP 6
+#define UDP 17
+</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">_connection</span> <span class="n">Connection</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">Data</span><span class="p">;</span>
+<span class="n">Connection</span><span class="o">*</span> <span class="nf">new_Connection</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+
+<span class="cp">#endif
+</span></code></pre></div></div>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// connection.c: Exemplo de implementação da "classe" connection</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;gc.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">"connection.h"</span><span class="cp">
+</span>
+<span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span><span class="n">fpSetServer</span><span class="p">)(</span><span class="n">Connection</span><span class="o">*</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="p">);</span>
+<span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span><span class="n">fpSetPort</span><span class="p">)(</span><span class="n">Connection</span><span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span><span class="n">fpSetProtocol</span><span class="p">)(</span><span class="n">Connection</span><span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span><span class="n">fpSetData</span><span class="p">)(</span><span class="n">Connection</span><span class="o">*</span><span class="p">,</span> <span class="n">Data</span> <span class="o">*</span><span class="p">);</span>
+<span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span><span class="n">fpStartConnection</span><span class="p">)(</span><span class="n">Connection</span><span class="o">*</span><span class="p">);</span>
+
+<span class="k">struct</span> <span class="n">_connection</span> <span class="p">{</span>
+ <span class="n">fpSetServer</span> <span class="n">setServer</span><span class="p">;</span>
+ <span class="n">fpSetPort</span> <span class="n">setPort</span><span class="p">;</span>
+ <span class="n">fpSetProtocol</span> <span class="n">setProtocol</span><span class="p">;</span>
+ <span class="n">fpSetData</span> <span class="n">setData</span><span class="p">;</span>
+ <span class="n">fpStartConnection</span> <span class="n">startConnection</span><span class="p">;</span>
+
+ <span class="kt">char</span> <span class="o">*</span> <span class="n">serverIPv4</span><span class="p">;</span>
+ <span class="kt">unsigned</span> <span class="kt">short</span> <span class="kt">int</span> <span class="n">serverPort</span><span class="p">;</span>
+ <span class="kt">short</span> <span class="kt">int</span> <span class="n">serverProtocol</span><span class="p">;</span>
+ <span class="n">Data</span> <span class="n">data</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="nf">setServer</span><span class="p">(</span><span class="n">Connection</span><span class="o">*</span> <span class="n">self</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">serverIPv4</span><span class="p">)</span> <span class="p">{</span>
+ <span class="n">self</span><span class="o">-&gt;</span><span class="n">serverIPv4</span> <span class="o">=</span> <span class="n">serverIPv4</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">setPort</span><span class="p">(</span><span class="n">Connection</span><span class="o">*</span> <span class="n">self</span><span class="p">,</span> <span class="kt">int</span> <span class="n">serverPort</span><span class="p">)</span> <span class="p">{</span>
+ <span class="n">self</span><span class="o">-&gt;</span><span class="n">serverPort</span> <span class="o">=</span> <span class="n">serverPort</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">setProtocol</span><span class="p">(</span><span class="n">Connection</span><span class="o">*</span> <span class="n">self</span><span class="p">,</span> <span class="kt">int</span> <span class="n">serverProtocol</span><span class="p">)</span> <span class="p">{</span>
+ <span class="n">self</span><span class="o">-&gt;</span><span class="n">serverProtocol</span> <span class="o">=</span> <span class="n">serverProtocol</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">setData</span><span class="p">(</span><span class="n">Connection</span><span class="o">*</span> <span class="n">self</span><span class="p">,</span> <span class="n">Data</span> <span class="o">*</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span>
+ <span class="n">self</span><span class="o">-&gt;</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">startConnection</span><span class="p">(</span><span class="n">Connection</span><span class="o">*</span> <span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+ <span class="n">printf</span><span class="p">(</span><span class="s">" Server: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">self</span><span class="o">-&gt;</span><span class="n">serverIPv4</span><span class="p">);</span>
+ <span class="n">printf</span><span class="p">(</span><span class="s">" Port: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">self</span><span class="o">-&gt;</span><span class="n">serverPort</span><span class="p">);</span>
+ <span class="n">printf</span><span class="p">(</span><span class="s">" Protocol: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">self</span><span class="o">-&gt;</span><span class="n">serverProtocol</span> <span class="o">==</span> <span class="mi">6</span><span class="o">?</span> <span class="s">"TCP"</span> <span class="o">:</span> <span class="s">"UDP"</span><span class="p">);</span>
+ <span class="n">printf</span><span class="p">(</span><span class="s">" Data: </span><span class="se">\"</span><span class="s">%s</span><span class="se">\"\n</span><span class="s">"</span><span class="p">,</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span> <span class="n">self</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">Connection</span><span class="o">*</span> <span class="nf">new_Connection</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+ <span class="n">Connection</span> <span class="o">*</span><span class="n">obj</span><span class="p">;</span>
+ <span class="n">obj</span> <span class="o">=</span> <span class="p">(</span><span class="n">Connection</span> <span class="o">*</span><span class="p">)</span> <span class="n">GC_malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Connection</span><span class="p">));</span>
+
+ <span class="n">obj</span><span class="o">-&gt;</span><span class="n">setServer</span>       <span class="o">=</span> <span class="n">setServer</span><span class="p">;</span>
+ <span class="n">obj</span><span class="o">-&gt;</span><span class="n">setPort</span>         <span class="o">=</span> <span class="n">setPort</span><span class="p">;</span>
+ <span class="n">obj</span><span class="o">-&gt;</span><span class="n">setProtocol</span>     <span class="o">=</span> <span class="n">setProtocol</span><span class="p">;</span>
+ <span class="n">obj</span><span class="o">-&gt;</span><span class="n">setData</span>         <span class="o">=</span> <span class="n">setData</span><span class="p">;</span>
+ <span class="n">obj</span><span class="o">-&gt;</span><span class="n">startConnection</span> <span class="o">=</span> <span class="n">startConnection</span><span class="p">;</span>
+
+ <span class="k">return</span> <span class="n">obj</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="materiais-interessantes">Materiais interessantes</h2>
+
+<p>Além da já citada palestra do Hisham Muhammad, alguns outros materiais interessantes sobre esse assunto:</p>
+
+<ul>
+  <li><a href="https://murilo.wordpress.com/2009/08/05/como-programar-em-c-orientado-a-objetos/">Como programar em C Orientado a Objetos</a></li>
+  <li><a href="https://web.archive.org/web/20171009133835/http://codare.net/2009/08/04/c-escondendo-o-conteudo-de-structs-com-tipos-incompletos/">C Escondendo o conteúdo de structs com tipos incompletos</a></li>
+  <li>Object-Oriented Techniques, Capítulo 8, livro <a href="http://www.sauleh.ir/fc98/static_files/materials/Richard%20Reese-Understanding%20and%20Using%20C%20Pointers-O%27Reilly%20Media%20(2013).pdf#%5B%7B%22num%22%3A662%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2Cnull%2C351.97696%2Cnull%5D">Understanding and Using C Pointers</a></li>
+  <li><a href="https://libcello.org/learn/a-fat-pointer-library">A Fat Pointer Library</a></li>
+</ul>]]></content><author><name>Vitalino Borges</name></author><category term="programacao" /><category term="c" /><category term="poo" /><summary type="html"><![CDATA[A primeira vez que tomei conhecimento da existência da possibilidade de escrever em OO em C foi por meio dessa palestra:]]></summary></entry></feed>

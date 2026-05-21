@@ -8,10 +8,10 @@
   line-height: 1.6;
   background: #1e1e2e;
   color: #cdd6f4;
-  border-radius: $radius-md;
-  padding: $space-6;
+  border-radius: $radius-sm;
+  padding: $space-2 $space-3;   // ← era $space-3 $space-4
   overflow-x: auto;
-  margin: $space-8 0;
+  margin: $space-3 0;
   box-shadow: $shadow-md;
 
   // Barra de título do bloco de código

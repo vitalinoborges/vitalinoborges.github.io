@@ -18,7 +18,7 @@ title: Início
     {% if site.featured_categories %}
 
       {% for cat in site.featured_categories %}
-        {% assign cat_posts = site.posts | where_exp: "p", "p.categories contains cat.slug" %}
+        {% assign cat_posts = site.posts | where_exp: "p", "p.categories contains cat.slug" | reverse %}
 
         {% if cat_posts.size > 0 %}
         <section class="category-section">

@@ -91,6 +91,14 @@ code:not(pre code) {
   .post-title {
     font-size: clamp(1.6rem, 4vw, $fs-2xl);
     line-height: 1.2;
+    margin-bottom: $space-3;
+  }
+
+  .post-subtitle {
+    font-size: $fs-md;
+    color: $color-text-muted;
+    font-style: italic;
+    line-height: 1.5;
     margin-bottom: $space-4;
   }
 

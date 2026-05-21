@@ -1,6 +1,6 @@
-title: "Meu Blog Técnico"
-description: "Artigos sobre tecnologia, programação e ciência."
-author: "Seu Nome"
+title: "Index of /"
+description: "Anotações do Vitalino Borges."
+author: "Vitalino Borges"
 url: ""
 baseurl: ""
 
@@ -24,11 +24,17 @@ paginate_path: "/page:num/"
 
 # Categorias exibidas no index (ordem e rótulo)
 featured_categories:
-  - slug: programacao
-    label: "Programação"
+  - slug: eletronica
+    label: "Eletrônica & Hardware"
+  - slug: on-premises
+    label: "On-premises"
+  - slug: infraestrutura
+    label: "Infraestrutura"
+  - slug: sistemas-operacionais
+    label: "Sistemas Operacionais"
   - slug: devops
     label: "DevOps"
-  - slug: arquitetura
-    label: "Arquitetura de Software"
-  - slug: banco-de-dados
-    label: "Banco de Dados"
+  - slug: cybersecurity
+    label: "Cybersecurity"
+  - slug: programacao
+    label: "Programação"

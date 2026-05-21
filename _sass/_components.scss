@@ -311,3 +311,27 @@
   z-index: 200;
   transition: width 0.1s linear;
 }
+
+figure {
+  margin: 2rem auto;
+  text-align: center;
+
+  img {
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+    margin-bottom: 0;    // ← adicione aqui
+  }
+
+  figcaption {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #6b6560;
+    font-style: italic;
+  }
+
+  .post-content {
+    figure img {
+      margin: 0;
+    }
+  }
+}

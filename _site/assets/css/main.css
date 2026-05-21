@@ -79,13 +79,14 @@ p:last-child { margin-bottom: 0; }
 code:not(pre code) { font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace; font-size: 0.85em; background: #ededf0; color: #8f4028; padding: 0.15em 0.4em; border-radius: 3px; border: 1px solid #e0e0e5; }
 
 .post-header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid #e0e0e5; }
-.post-header .post-title { font-size: clamp(1.6rem, 4vw, 2.369rem); line-height: 1.2; margin-bottom: 1rem; }
+.post-header .post-title { font-size: clamp(1.6rem, 4vw, 2.369rem); line-height: 1.2; margin-bottom: 0.75rem; }
+.post-header .post-subtitle { font-size: 1.125rem; color: #6b6560; font-style: italic; line-height: 1.5; margin-bottom: 1rem; }
 .post-header .post-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; color: #6b6560; font-size: 0.875rem; font-style: italic; }
 .post-header .post-meta-sep { color: #e0e0e5; }
 
 .post-content > p:first-of-type::first-letter { float: left; font-size: 3.5em; line-height: 0.8; margin: 0.05em 0.1em 0 0; color: #b85c38; font-weight: 700; }
 
-.highlight, pre { font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace; font-size: 0.85rem; line-height: 1.6; background: #1e1e2e; color: #cdd6f4; border-radius: 6px; padding: 1.5rem; overflow-x: auto; margin: 2rem 0; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+.highlight, pre { font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace; font-size: 0.85rem; line-height: 1.6; background: #1e1e2e; color: #cdd6f4; border-radius: 3px; padding: 0.5rem 0.75rem; overflow-x: auto; margin: 0.75rem 0; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
 .highlight[data-lang]::before, pre[data-lang]::before { content: attr(data-lang); display: block; font-size: 0.75rem; color: #6c7086; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; border-bottom: 1px solid #313244; padding-bottom: 0.5rem; }
 
 .highlight .c, .highlight .cm, .highlight .c1, .highlight .cs { color: #6c7086; font-style: italic; }
@@ -158,3 +159,8 @@ code:not(pre code) { font-family: "JetBrains Mono", "Fira Code", "Cascadia Code"
 .scroll-top:hover { background: #b85c38; transform: translateY(-2px); }
 
 .reading-progress { position: fixed; top: 0; left: 0; height: 2px; background: #b85c38; z-index: 200; transition: width 0.1s linear; }
+
+figure { margin: 2rem auto; text-align: center; }
+figure img { border-radius: 6px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); margin-bottom: 0; }
+figure figcaption { margin-top: 0.25rem; font-size: 0.875rem; color: #6b6560; font-style: italic; }
+figure .post-content figure img { margin: 0; }

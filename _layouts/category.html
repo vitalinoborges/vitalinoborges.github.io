@@ -7,7 +7,7 @@ layout: default
   <header style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 2px solid #1a1714;">
     <p style="font-size: 0.875rem; color: #b85c38; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Categoria</p>
     <h1 style="font-size: 2.369rem; margin: 0; letter-spacing: -0.03em;">{{ page.category_label | default: page.category }}</h1>
-    {% assign cat_posts = site.posts | where_exp: "p", "p.categories contains page.category" %}
+    {% assign cat_posts = site.posts | where_exp: "p", "p.categories contains page.category" | reverse %}
     <p style="color: #6b6560; margin-top: 0.75rem; font-style: italic;">{{ cat_posts.size }} artigo{% if cat_posts.size != 1 %}s{% endif %}</p>
   </header>
 
