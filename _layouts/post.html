@@ -1,0 +1,63 @@
+---
+layout: default
+---
+
+<!-- Barra de progresso de leitura -->
+<div class="reading-progress" id="readingProgress"></div>
+
+<article class="post-layout">
+
+  <header class="post-header">
+    <h1 class="post-title">{{ page.title }}</h1>
+
+    <div class="post-meta">
+      <time datetime="{{ page.date | date_to_xmlschema }}">
+        {{ page.date | date: "%d de %B de %Y" }}
+      </time>
+
+      {% if page.categories and page.categories.size > 0 %}
+        <span class="post-meta-sep">·</span>
+        {% for cat in page.categories %}
+          <a href="{{ '/categorias/' | append: cat | relative_url }}" class="tag">{{ cat }}</a>
+        {% endfor %}
+      {% endif %}
+
+      {% if page.author %}
+        <span class="post-meta-sep">·</span>
+        <span>{{ page.author }}</span>
+      {% endif %}
+    </div>
+
+    {% if page.tags and page.tags.size > 0 %}
+    <div style="margin-top: 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+      {% for tag in page.tags %}
+        <span class="tag">{{ tag }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </header>
+
+  <div class="post-content">
+    {{ content }}
+  </div>
+
+  <!-- Navegação entre posts -->
+  <nav class="post-nav">
+    {% if page.previous.url %}
+    <a href="{{ page.previous.url | relative_url }}" class="post-nav-item prev">
+      <span class="nav-label">← Anterior</span>
+      <span class="nav-title">{{ page.previous.title }}</span>
+    </a>
+    {% else %}
+    <div></div>
+    {% endif %}
+
+    {% if page.next.url %}
+    <a href="{{ page.next.url | relative_url }}" class="post-nav-item next">
+      <span class="nav-label">Próximo →</span>
+      <span class="nav-title">{{ page.next.title }}</span>
+    </a>
+    {% endif %}
+  </nav>
+
+</article>

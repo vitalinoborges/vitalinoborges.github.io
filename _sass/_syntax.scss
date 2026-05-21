@@ -1,0 +1,44 @@
+// ============================================================
+// SYNTAX HIGHLIGHTING (Rouge / GitHub Pages compatível)
+// ============================================================
+
+.highlight, pre {
+  font-family: $font-mono;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  background: #1e1e2e;
+  color: #cdd6f4;
+  border-radius: $radius-md;
+  padding: $space-6;
+  overflow-x: auto;
+  margin: $space-8 0;
+  box-shadow: $shadow-md;
+
+  // Barra de título do bloco de código
+  &[data-lang]::before {
+    content: attr(data-lang);
+    display: block;
+    font-size: $fs-xs;
+    color: #6c7086;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: $space-3;
+    border-bottom: 1px solid #313244;
+    padding-bottom: $space-2;
+  }
+}
+
+// Tokens (Catppuccin Mocha palette)
+.highlight {
+  .c, .cm, .c1, .cs    { color: #6c7086; font-style: italic; } // comments
+  .k, .kd, .kn, .kp    { color: #cba6f7; }                     // keywords
+  .s, .s1, .s2, .sb    { color: #a6e3a1; }                     // strings
+  .n, .na, .nb         { color: #cdd6f4; }                     // names
+  .nf, .nc             { color: #89b4fa; }                     // functions/classes
+  .o, .ow              { color: #89dceb; }                     // operators
+  .m, .mi, .mf         { color: #fab387; }                     // numbers
+  .p                   { color: #cdd6f4; }                     // punctuation
+  .nt                  { color: #f38ba8; }                     // html tags
+  .nv, .vi             { color: #f5c2e7; }                     // variables
+  .err                 { color: #f38ba8; background: none; }
+}

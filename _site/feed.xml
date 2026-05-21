@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2026-05-20T19:29:51+00:00</updated><id>http://0.0.0.0:4000/feed.xml</id><title type="html">Meu Blog Técnico</title><subtitle>Artigos sobre tecnologia, programação e ciência.</subtitle><author><name>Seu Nome</name></author><entry><title type="html">Índices no PostgreSQL: quando e como usar</title><link href="http://0.0.0.0:4000/banco-de-dados/2025/05/18/indices-postgresql/" rel="alternate" type="text/html" title="Índices no PostgreSQL: quando e como usar" /><published>2025-05-18T00:00:00+00:00</published><updated>2025-05-18T00:00:00+00:00</updated><id>http://0.0.0.0:4000/banco-de-dados/2025/05/18/indices-postgresql</id><content type="html" xml:base="http://0.0.0.0:4000/banco-de-dados/2025/05/18/indices-postgresql/"><![CDATA[<p>Índices são a ferramenta mais poderosa para otimizar consultas em bancos de dados relacionais. Mas usados incorretamente, podem prejudicar a performance de escrita sem benefício real.</p>
+
+<h2 id="como-um-índice-funciona">Como um índice funciona</h2>
+
+<p>Um índice é uma estrutura de dados auxiliar (tipicamente uma B-Tree) que permite ao banco localizar linhas sem fazer um <em>sequential scan</em> na tabela inteira.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Verificar se uma query usa índice</span>
+<span class="k">EXPLAIN</span> <span class="k">ANALYZE</span>
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">orders</span> <span class="k">WHERE</span> <span class="n">customer_id</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+
+<span class="c1">-- Criar um índice simples</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_orders_customer</span> <span class="k">ON</span> <span class="n">orders</span><span class="p">(</span><span class="n">customer_id</span><span class="p">);</span>
+
+<span class="c1">-- Índice composto (ordem importa!)</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_orders_status_date</span> <span class="k">ON</span> <span class="n">orders</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">created_at</span> <span class="k">DESC</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="quando-não-criar-índices">Quando NÃO criar índices</h2>
+
+<ul>
+  <li>Tabelas pequenas (menos de ~10.000 linhas)</li>
+  <li>Colunas com baixa cardinalidade (ex: booleano <code class="language-plaintext highlighter-rouge">ativo</code>)</li>
+  <li>Tabelas com muitas escritas e poucas leituras</li>
+</ul>]]></content><author><name>Seu Nome</name></author><category term="banco-de-dados" /><category term="postgresql" /><category term="sql" /><category term="performance" /><summary type="html"><![CDATA[Índices são a ferramenta mais poderosa para otimizar consultas em bancos de dados relacionais. Mas usados incorretamente, podem prejudicar a performance de escrita sem benefício real.]]></summary></entry><entry><title type="html">Princípios SOLID explicados com exemplos reais</title><link href="http://0.0.0.0:4000/arquitetura/2025/05/01/principios-solid/" rel="alternate" type="text/html" title="Princípios SOLID explicados com exemplos reais" /><published>2025-05-01T00:00:00+00:00</published><updated>2025-05-01T00:00:00+00:00</updated><id>http://0.0.0.0:4000/arquitetura/2025/05/01/principios-solid</id><content type="html" xml:base="http://0.0.0.0:4000/arquitetura/2025/05/01/principios-solid/"><![CDATA[<p>Os princípios SOLID são a base para escrever código orientado a objetos que seja fácil de manter e estender. Vamos ver cada um com exemplos concretos.</p>
+
+<h2 id="s--single-responsibility">S — Single Responsibility</h2>
+
+<p>Uma classe deve ter um único motivo para mudar. Isso não significa que ela deve fazer apenas uma coisa, mas que todas as coisas que ela faz devem estar relacionadas a uma única responsabilidade.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Ruim: a classe faz coisas demais
+</span><span class="k">class</span> <span class="nc">User</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">save_to_db</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="p">...</span>
+    <span class="k">def</span> <span class="nf">send_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="p">...</span>
+    <span class="k">def</span> <span class="nf">generate_report</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="p">...</span>
+
+<span class="c1"># Melhor: responsabilidades separadas
+</span><span class="k">class</span> <span class="nc">UserRepository</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span> <span class="p">...</span>
+
+<span class="k">class</span> <span class="nc">UserNotifier</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">send_welcome_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span> <span class="p">...</span>
+</code></pre></div></div>
+
+<h2 id="o--openclosed">O — Open/Closed</h2>
+
+<p>Classes devem estar abertas para extensão, mas fechadas para modificação. Use herança e composição em vez de alterar código existente.</p>]]></content><author><name>Seu Nome</name></author><category term="arquitetura" /><category term="solid" /><category term="oop" /><category term="design-patterns" /><summary type="html"><![CDATA[Os princípios SOLID são a base para escrever código orientado a objetos que seja fácil de manter e estender. Vamos ver cada um com exemplos concretos.]]></summary></entry><entry><title type="html">Docker na prática: containers para desenvolvedores</title><link href="http://0.0.0.0:4000/devops/2025/04/15/docker-na-pratica/" rel="alternate" type="text/html" title="Docker na prática: containers para desenvolvedores" /><published>2025-04-15T00:00:00+00:00</published><updated>2025-04-15T00:00:00+00:00</updated><id>http://0.0.0.0:4000/devops/2025/04/15/docker-na-pratica</id><content type="html" xml:base="http://0.0.0.0:4000/devops/2025/04/15/docker-na-pratica/"><![CDATA[<p>Containers revolucionaram a forma como desenvolvemos e entregamos software. Este guia cobre o essencial para começar a usar Docker no seu dia a dia.</p>
+
+<h2 id="o-que-é-um-container">O que é um container?</h2>
+
+<p>Um container é uma unidade de software que empacota o código e todas as suas dependências, garantindo que a aplicação rode de forma consistente em qualquer ambiente.</p>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FROM</span><span class="s"> python:3.12-slim</span>
+
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+<span class="k">COPY</span><span class="s"> requirements.txt .</span>
+<span class="k">RUN </span>pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
+
+<span class="k">COPY</span><span class="s"> . .</span>
+<span class="k">CMD</span><span class="s"> ["python", "app.py"]</span>
+</code></pre></div></div>
+
+<h2 id="comandos-básicos">Comandos básicos</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Construir uma imagem</span>
+docker build <span class="nt">-t</span> minha-app <span class="nb">.</span>
+
+<span class="c"># Rodar um container</span>
+docker run <span class="nt">-p</span> 8080:80 minha-app
+
+<span class="c"># Listar containers em execução</span>
+docker ps
+</code></pre></div></div>]]></content><author><name>Seu Nome</name></author><category term="devops" /><category term="docker" /><category term="containers" /><category term="infraestrutura" /><summary type="html"><![CDATA[Containers revolucionaram a forma como desenvolvemos e entregamos software. Este guia cobre o essencial para começar a usar Docker no seu dia a dia.]]></summary></entry><entry><title type="html">Introdução ao Git: controle de versão na prática</title><link href="http://0.0.0.0:4000/programacao/2025/03/10/introducao-ao-git/" rel="alternate" type="text/html" title="Introdução ao Git: controle de versão na prática" /><published>2025-03-10T00:00:00+00:00</published><updated>2025-03-10T00:00:00+00:00</updated><id>http://0.0.0.0:4000/programacao/2025/03/10/introducao-ao-git</id><content type="html" xml:base="http://0.0.0.0:4000/programacao/2025/03/10/introducao-ao-git/"><![CDATA[<p>Git é a ferramenta de controle de versão mais usada no mundo, e por boas razões. Neste artigo vamos cobrir os conceitos fundamentais que você precisa saber para começar a trabalhar com eficiência.</p>
+
+<h2 id="por-que-controle-de-versão-importa">Por que controle de versão importa</h2>
+
+<p>Imagine trabalhar em um projeto sem nenhuma forma de desfazer mudanças, colaborar com outros desenvolvedores ou entender o histórico de alterações no código. Seria caótico.</p>
+
+<h2 id="os-três-estados-do-git">Os três estados do Git</h2>
+
+<p>O Git organiza seu trabalho em três áreas principais:</p>
+
+<ul>
+  <li><strong>Working directory</strong>: onde você edita os arquivos</li>
+  <li><strong>Staging area</strong>: onde você prepara as mudanças para commit</li>
+  <li><strong>Repository</strong>: o histórico permanente de commits</li>
+</ul>
+
+<h2 id="comandos-essenciais">Comandos essenciais</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Inicializar um repositório</span>
+git init
+
+<span class="c"># Adicionar arquivos ao staging</span>
+git add <span class="nb">.</span>
+
+<span class="c"># Fazer um commit</span>
+git commit <span class="nt">-m</span> <span class="s2">"feat: adiciona nova funcionalidade"</span>
+
+<span class="c"># Ver o histórico</span>
+git log <span class="nt">--oneline</span>
+</code></pre></div></div>
+
+<p>O domínio desses comandos é o ponto de partida para qualquer fluxo de trabalho moderno com Git.</p>]]></content><author><name>Seu Nome</name></author><category term="programacao" /><category term="git" /><category term="versionamento" /><category term="devtools" /><summary type="html"><![CDATA[Um guia prático e direto sobre os fundamentos do Git para desenvolvedores que estão começando.]]></summary></entry></feed>

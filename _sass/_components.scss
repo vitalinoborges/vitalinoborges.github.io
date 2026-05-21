@@ -1,0 +1,313 @@
+// ============================================================
+// COMPONENTES
+// ============================================================
+
+// ---- TAG ----
+.tag {
+  display: inline-flex;
+  align-items: center;
+  background: $color-tag-bg;
+  color: $color-text-muted;
+  font-size: $fs-xs;
+  font-style: normal;
+  padding: 0.2em 0.7em;
+  border-radius: 100px;
+  border: 1px solid $color-border;
+  transition: all $transition;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+
+  &:hover {
+    background: $color-accent;
+    color: white;
+    border-color: $color-accent;
+  }
+}
+
+// ---- CATEGORIA SECTION (index) ----
+.category-section {
+  margin-bottom: $space-16;
+
+  &:last-child { margin-bottom: 0; }
+}
+
+.category-header {
+  display: flex;
+  align-items: baseline;
+  gap: $space-4;
+  margin-bottom: $space-6;
+  padding-bottom: $space-4;
+  border-bottom: 2px solid $color-text;
+
+  .category-title {
+    font-size: $fs-lg;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .category-count {
+    font-size: $fs-sm;
+    color: $color-text-muted;
+    font-style: italic;
+  }
+
+  .category-link {
+    margin-left: auto;
+    font-size: $fs-sm;
+    color: $color-accent;
+    font-style: italic;
+
+    &:hover { color: $color-accent-dark; }
+  }
+}
+
+// ---- POST LIST (index) ----
+.post-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.post-list-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: $space-4;
+  padding: $space-3 0;
+  border-bottom: 1px solid $color-border;
+  transition: background $transition;
+
+  &:last-child { border-bottom: none; }
+
+  &:hover .post-list-title {
+    color: $color-accent;
+  }
+
+  .post-list-date {
+    font-size: $fs-xs;
+    color: $color-text-muted;
+    font-style: italic;
+    white-space: nowrap;
+    min-width: 5rem;
+  }
+
+  .post-list-title {
+    font-size: $fs-base;
+    font-weight: 600;
+    color: $color-text;
+    transition: color $transition;
+    line-height: 1.4;
+  }
+
+  .post-list-tags {
+    display: flex;
+    gap: $space-2;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+
+    @media (max-width: $bp-md) {
+      display: none;
+    }
+  }
+
+  @media (max-width: $bp-sm) {
+    grid-template-columns: 1fr;
+    gap: $space-1;
+
+    .post-list-date { order: 2; }
+    .post-list-title { order: 1; }
+  }
+}
+
+// ---- HERO (index) ----
+.index-hero {
+  margin-bottom: $space-16;
+  padding-bottom: $space-12;
+  border-bottom: 1px solid $color-border;
+
+  .hero-eyebrow {
+    font-size: $fs-sm;
+    color: $color-accent;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-style: normal;
+    margin-bottom: $space-3;
+    display: block;
+  }
+
+  .hero-title {
+    font-size: clamp(2rem, 5vw, $fs-3xl);
+    line-height: 1.1;
+    margin-bottom: $space-6;
+    letter-spacing: -0.03em;
+  }
+
+  .hero-description {
+    font-size: $fs-md;
+    color: $color-text-muted;
+    max-width: 36rem;
+    line-height: 1.7;
+    margin: 0;
+  }
+}
+
+// ---- SIDEBAR WIDGET ----
+.sidebar-widget {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  padding: $space-6;
+  margin-bottom: $space-6;
+
+  &:last-child { margin-bottom: 0; }
+
+  .widget-title {
+    font-size: $fs-sm;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $color-text-muted;
+    margin-bottom: $space-4;
+    padding-bottom: $space-3;
+    border-bottom: 1px solid $color-border;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      padding: $space-2 0;
+      border-bottom: 1px solid $color-border;
+      font-size: $fs-sm;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &:last-child { border-bottom: none; padding-bottom: 0; }
+
+      a { color: $color-text; }
+      span { color: $color-text-muted; font-style: italic; font-size: $fs-xs; }
+    }
+  }
+}
+
+// ---- PAGINAÇÃO ----
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-4;
+  margin-top: $space-16;
+  padding-top: $space-8;
+  border-top: 1px solid $color-border;
+
+  a, span {
+    font-size: $fs-sm;
+    color: $color-text-muted;
+    padding: $space-2 $space-4;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+  }
+
+  a:hover {
+    background: $color-accent;
+    color: white;
+    border-color: $color-accent;
+  }
+
+  .current {
+    background: $color-text;
+    color: white;
+    border-color: $color-text;
+  }
+}
+
+// ---- POST NAVIGATION ----
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-4;
+  margin-top: $space-16;
+  padding-top: $space-8;
+  border-top: 1px solid $color-border;
+
+  @media (max-width: $bp-sm) {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-item {
+    padding: $space-4;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    transition: all $transition;
+
+    &:hover { border-color: $color-accent; }
+
+    &.next { text-align: right; }
+
+    .nav-label {
+      font-size: $fs-xs;
+      color: $color-text-muted;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: block;
+      margin-bottom: $space-1;
+      font-style: normal;
+    }
+
+    .nav-title {
+      font-size: $fs-sm;
+      font-weight: 600;
+      color: $color-text;
+      transition: color $transition;
+    }
+
+    &:hover .nav-title { color: $color-accent; }
+  }
+}
+
+// ---- SCROLL TO TOP ----
+.scroll-top {
+  position: fixed;
+  bottom: $space-8;
+  right: $space-8;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: $color-text;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: all $transition;
+  font-size: 1rem;
+  box-shadow: $shadow-md;
+
+  &.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  &:hover {
+    background: $color-accent;
+    transform: translateY(-2px);
+  }
+}
+
+// ---- READING PROGRESS ----
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: $color-accent;
+  z-index: 200;
+  transition: width 0.1s linear;
+}

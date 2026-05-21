@@ -1,0 +1,41 @@
+---
+layout: default
+---
+
+<div style="max-width: 42rem; margin: 0 auto;">
+
+  <header style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 2px solid #1a1714;">
+    <p style="font-size: 0.875rem; color: #b85c38; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Categoria</p>
+    <h1 style="font-size: 2.369rem; margin: 0; letter-spacing: -0.03em;">{{ page.category_label | default: page.category }}</h1>
+    {% assign cat_posts = site.posts | where_exp: "p", "p.categories contains page.category" %}
+    <p style="color: #6b6560; margin-top: 0.75rem; font-style: italic;">{{ cat_posts.size }} artigo{% if cat_posts.size != 1 %}s{% endif %}</p>
+  </header>
+
+  {% assign posts_by_year = cat_posts | group_by_exp: "p", "p.date | date: '%Y'" %}
+
+  {% for year_group in posts_by_year %}
+  <section style="margin-bottom: 3rem;">
+    <h2 style="font-size: 1rem; color: #6b6560; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #e8e2d9;">
+      {{ year_group.name }}
+    </h2>
+    <ul class="post-list">
+      {% for post in year_group.items %}
+      <li class="post-list-item">
+        <span class="post-list-date">{{ post.date | date: "%d/%m" }}</span>
+        <a href="{{ post.url | relative_url }}" class="post-list-title">{{ post.title }}</a>
+        <div class="post-list-tags">
+          {% for tag in post.tags limit:2 %}
+            <span class="tag">{{ tag }}</span>
+          {% endfor %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endfor %}
+
+  {% if cat_posts.size == 0 %}
+  <p style="color: #6b6560; font-style: italic;">Nenhum artigo nesta categoria ainda.</p>
+  {% endif %}
+
+</div>

@@ -1,0 +1,22 @@
+<header class="site-header">
+  <div class="header-inner">
+    <a href="{{ '/' | relative_url }}" class="site-title">
+      {{ site.title | split: ' ' | first }}<span>{{ site.title | split: ' ' | slice: 1, 100 | join: ' ' }}</span>
+    </a>
+
+    <nav aria-label="Navegação principal">
+      <a href="{{ '/' | relative_url }}" {% if page.url == '/' %}class="active"{% endif %}>Início</a>
+
+      {% if site.featured_categories %}
+        {% for cat in site.featured_categories limit:3 %}
+          <a href="{{ '/categorias/' | append: cat.slug | relative_url }}"
+             {% if page.category == cat.slug %}class="active"{% endif %}>
+            {{ cat.label }}
+          </a>
+        {% endfor %}
+      {% endif %}
+
+      <a href="{{ '/sobre' | relative_url }}" {% if page.url contains '/sobre' %}class="active"{% endif %}>Sobre</a>
+    </nav>
+  </div>
+</header>

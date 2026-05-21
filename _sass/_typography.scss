@@ -1,0 +1,118 @@
+// ============================================================
+// TIPOGRAFIA
+// ============================================================
+
+// Hierarquia de títulos
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-serif;
+  font-weight: 700;
+  line-height: 1.25;
+  color: $color-text;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: $fs-2xl; margin-bottom: $space-6; }
+h2 { font-size: $fs-xl;  margin: $space-12 0 $space-4; }
+h3 { font-size: $fs-lg;  margin: $space-8 0 $space-3; }
+h4 { font-size: $fs-md;  margin: $space-6 0 $space-2; }
+
+p {
+  margin-bottom: $space-6;
+  &:last-child { margin-bottom: 0; }
+}
+
+// Conteúdo do post
+.post-content {
+  h2::before {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 2px;
+    background: $color-accent;
+    margin-bottom: $space-3;
+  }
+
+  ul, ol {
+    margin-bottom: $space-6;
+
+    li {
+      margin-bottom: $space-2;
+    }
+  }
+
+  a {
+    border-bottom: 1px solid rgba($color-accent, 0.4);
+    transition: border-color $transition;
+
+    &:hover {
+      border-bottom-color: $color-accent;
+    }
+  }
+
+  // Imagens dentro do post
+  img {
+    border-radius: $radius-md;
+    box-shadow: $shadow-md;
+    margin: $space-8 auto;
+  }
+
+  // Nota/destaque
+  .note, .tip, .warning {
+    padding: $space-4 $space-6;
+    border-radius: $radius-md;
+    margin: $space-8 0;
+    border-left: 3px solid;
+
+    strong { display: block; margin-bottom: $space-2; }
+  }
+
+  .note    { background: #eef4ff; border-color: #4a7fcb; }
+  .tip     { background: #edfdf2; border-color: #2ea850; }
+  .warning { background: #fff8ed; border-color: #e08e1b; }
+}
+
+// Inline code
+code:not(pre code) {
+  font-family: $font-mono;
+  font-size: 0.85em;
+  background: $color-code-bg;
+  color: $color-accent-dark;
+  padding: 0.15em 0.4em;
+  border-radius: $radius-sm;
+  border: 1px solid $color-border;
+}
+
+// Cabeçalho do post
+.post-header {
+  margin-bottom: $space-12;
+  padding-bottom: $space-8;
+  border-bottom: 1px solid $color-border;
+
+  .post-title {
+    font-size: clamp(1.6rem, 4vw, $fs-2xl);
+    line-height: 1.2;
+    margin-bottom: $space-4;
+  }
+
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $space-3;
+    color: $color-text-muted;
+    font-size: $fs-sm;
+    font-style: italic;
+  }
+
+  .post-meta-sep { color: $color-border; }
+}
+
+// Dropcap no primeiro parágrafo
+.post-content > p:first-of-type::first-letter {
+  float: left;
+  font-size: 3.5em;
+  line-height: 0.8;
+  margin: 0.05em 0.1em 0 0;
+  color: $color-accent;
+  font-weight: 700;
+}
